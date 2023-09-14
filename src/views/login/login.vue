@@ -1,22 +1,20 @@
 <template>
-  <div class="home">
-    <h2>home</h2>
+  <div class="login">
+    <LoginPannel></LoginPannel>
   </div>
 </template>
 
 <script setup lang="ts">
-import httpRequest from "@/service";
-httpRequest
-  .get({
-    url: "api/user"
-  })
-  .then((res) => {
-    console.log(res);
-  });
+import LoginPannel from "./ChildrenComponents/LoginPanel.vue";
 </script>
 
 <style lang="less" scoped>
-.home {
-  color: red;
+.login {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url("@/assets/img/login-bg.svg");
 }
 </style>
