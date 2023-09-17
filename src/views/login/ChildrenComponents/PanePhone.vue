@@ -1,37 +1,31 @@
 <template>
-  <el-radio-group v-model="labelPosition" label="label position">
-    <el-radio-button label="left">Left</el-radio-button>
-    <el-radio-button label="right">Right</el-radio-button>
-    <el-radio-button label="top">Top</el-radio-button>
-  </el-radio-group>
-  <div style="margin: 20px" />
-  <el-form
-    :label-position="labelPosition"
-    label-width="100px"
-    :model="formLabelAlign"
-    style="max-width: 460px"
-  >
-    <el-form-item label="Name">
-      <el-input v-model="formLabelAlign.name" />
-    </el-form-item>
-    <el-form-item label="Activity zone">
-      <el-input v-model="formLabelAlign.region" />
-    </el-form-item>
-    <el-form-item label="Activity form">
-      <el-input v-model="formLabelAlign.type" />
-    </el-form-item>
-  </el-form>
+  <div class="panel-phone">
+    <el-form label-width="60px" size="large">
+      <el-form-item label="手机号">
+        <el-input />
+      </el-form-item>
+      <el-form-item label="验证码">
+        <div class="verify-code">
+          <el-input />
+          <el-button class="get-btn" type="primary">获取验证码</el-button>
+        </div>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive, ref } from "vue";
+<script setup lang="ts"></script>
 
-type DirectType = "right" | "top" | "left";
-const labelPosition = ref<DirectType>("right");
+<style lang="less" scoped>
+.panel-phone {
+  color: red;
+}
 
-const formLabelAlign = reactive({
-  name: "",
-  region: "",
-  type: ""
-});
-</script>
+.verify-code {
+  display: flex;
+
+  .get-btn {
+    margin-left: 8px;
+  }
+}
+</style>

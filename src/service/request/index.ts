@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { AxiosInstance } from "axios";
 import type { HttpReuqestConfig } from "./type";
+import { localCache } from "@/utils/cache";
 // 针对AxiosRequestConfig配置进行扩展
 
 class Request {
@@ -11,7 +12,11 @@ class Request {
     // 每个instance实例都添加拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        console.log("全局拦截", config);
+        const token = localCache.getChache("token");
+        // console.log("全局拦截", config);
+        if (config.headers && token) {
+          config.headers.Authorization = "Bearer " + token;
+        }
         return config;
       },
       (err) => {

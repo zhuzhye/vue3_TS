@@ -11,7 +11,7 @@
               <span class="text">帐号登录</span>
             </div>
           </template>
-          <PanelAccount></PanelAccount>
+          <PanelAccount ref="accountRef"></PanelAccount>
         </el-tab-pane>
 
         <!-- 2.手机登录的Pane -->
@@ -37,14 +37,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import PanelAccount from "./PanelAccount.vue";
 import PanePhone from "./PanePhone.vue";
-let isRemPwd = ref(true);
+import { localCache } from "@/utils/cache";
+
+let isRemPwd = ref<boolean>(localCache.getChache("isRemPwd") ?? false);
 let activeName = ref("account");
+const accountRef = ref<InstanceType<typeof PanelAccount>>();
+watch(isRemPwd, (newValue) => {
+  localCache.setChche("isRemPwd", newValue);
+});
 function loginBtnClick() {
   if (activeName.value === "account") {
-    console.log("账号登录");
+    // 获取子组件实例
+    accountRef.value?.loginAction(isRemPwd);
   } else {
     console.log("手机登录");
   }
