@@ -3,51 +3,59 @@
     <!-- 1.logo -->
     <div class="logo">
       <img class="img" src="@/assets/img/logo.svg" alt="" />
-      <h2 class="title">后台管理系统</h2>
+      <h2 class="title" v-show="!isFold">后台管理系统</h2>
     </div>
     <div class="menu">
       <el-menu
-        default-active="2"
-        class="el-menu-vertical-demo"
+        text-color="#b7bdc3"
+        active-text-color="#fff"
         background-color="#001529"
-        text-color="#fff"
+        :collapse="isFold"
+        default-active="3"
       >
-        <el-sub-menu index="1">
-          <template #title>
-            <el-icon><location /></el-icon>
-            <span>Navigator One</span>
-          </template>
-          <el-menu-item-group>
-            <template #title><span>Group One</span></template>
-            <el-menu-item index="1-1">item one</el-menu-item>
-            <el-menu-item index="1-2">item two</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="Group Two">
-            <el-menu-item index="1-3">item three</el-menu-item>
-          </el-menu-item-group>
-          <el-sub-menu index="1-4">
-            <template #title><span>item four</span></template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
+        <template v-for="item in userMenus" :key="item.id">
+          <el-sub-menu :index="item.id + ''">
+            <template #title>
+              <el-icon>
+                <component :is="item.icon.split('el-icon-')[1]"></component>
+              </el-icon>
+              <span>{{ item.name }}</span>
+            </template>
+            <template v-for="subItem in item.children" :key="subItem.id">
+              <el-menu-item :index="subItem.id + ''" @click="handleClickItem(subItem)">
+                {{ subItem.name }}
+              </el-menu-item>
+            </template>
           </el-sub-menu>
-        </el-sub-menu>
-        <el-menu-item index="2">
-          <el-icon><icon-menu /></el-icon>
-          <template #title>Navigator Two</template>
-        </el-menu-item>
-        <el-menu-item index="3" disabled>
-          <el-icon><document /></el-icon>
-          <template #title>Navigator Three</template>
-        </el-menu-item>
-        <el-menu-item index="4">
-          <el-icon><setting /></el-icon>
-          <template #title>Navigator Four</template>
-        </el-menu-item>
+        </template>
       </el-menu>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import useLoginStore from "@/store/login/login";
+import type { subItemType } from "./types";
+import { useRouter } from "vue-router";
+// 0.定义props
+defineProps({
+  isFold: {
+    type: Boolean,
+    default: false
+  }
+});
+
+const router = useRouter();
+// 1.获取动态的菜单
+const loginStore = useLoginStore();
+const userMenus = loginStore.userMenus;
+
+// 2.监听item的点击
+
+function handleClickItem(subItem: subItemType) {
+  router.push(subItem.url);
+}
+</script>
 <style lang="less" scoped>
 .main-menu {
   height: 100%;

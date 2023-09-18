@@ -1,31 +1,28 @@
 <template>
   <div class="main">
     <el-container class="main-content">
-      <el-aside width="200px">
-        <MainMenu></MainMenu>
+      <el-aside :width="isCollapse ? '50px' : '210px'">
+        <MainMenu v-model:isFold="isCollapse"></MainMenu>
       </el-aside>
       <el-container>
         <el-header>
-          <MainHeader></MainHeader>
+          <MainHeader @foldChange="foldChange"></MainHeader>
         </el-header>
-        <el-main>Main</el-main>
+        <el-main><router-view></router-view></el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script setup lang="ts">
-// import { localCache } from "@/utils/cache";
-// import { useRouter } from "vue-router";
-// const router = useRouter();
-// function handleExitClick() {
-//   // 1.删除token
-//   localCache.removeCache("token");
-//   // 2.跳回登陆页面
-//   router.push("/login");
-// }
 import MainMenu from "@/components/main-menu/MainMemu.vue";
 import MainHeader from "@/components/main-header/MainHeader.vue";
+import { ref } from "vue";
+//处理main-header折叠的变化
+let isCollapse = ref(false);
+function foldChange(isFold: boolean) {
+  isCollapse.value = isFold;
+}
 </script>
 
 <style lang="less" scoped>
@@ -46,7 +43,7 @@ import MainHeader from "@/components/main-header/MainHeader.vue";
     scrollbar-width: none; /* firefox */
     -ms-overflow-style: none; /* IE 10+ */
 
-    transition: width 0.3s ease;
+    transition: width 0.5s ease;
 
     &::-webkit-scrollbar {
       display: none;
