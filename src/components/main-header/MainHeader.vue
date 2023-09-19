@@ -6,7 +6,7 @@
       </el-icon>
     </div>
     <div class="content">
-      <div class="breadcrumbs">面包屑</div>
+      <div class="breadcrumbs"><HeaderCrumb></HeaderCrumb></div>
       <div class="info"><HeaderInfo></HeaderInfo></div>
     </div>
   </div>
@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import HeaderInfo from "./c-cpns/HeaderInfo.vue";
-
+import HeaderCrumb from "./c-cpns/HeaderCrumb.vue";
 let isFold = ref(false);
 
 // 0.内部自定义事件

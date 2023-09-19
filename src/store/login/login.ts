@@ -3,6 +3,7 @@ import { accountLogin, getUserInfoById, getUserMenusByRoleId } from "@/service/l
 import type { IAccount } from "../../types";
 import { localCache } from "@/utils/cache";
 import router from "@/router";
+import { mapMenusToRoutes } from "@/utils/mapMenus";
 interface ILoginState {
   token: string;
   userInfo: {
@@ -19,15 +20,16 @@ interface ILoginState {
 const useLoginStore = defineStore("login", {
   // 如何指定state类型
   state: (): ILoginState => ({
-    token: localCache.getChache("token") ?? "",
-    userInfo: localCache.getChache("userInfo") ?? {},
-    userMenus: localCache.getChache("userMenus") ?? []
+    token: "",
+    userInfo: {},
+    userMenus: []
   }),
   actions: {
     async loginAccountAction(account: IAccount) {
       // 1.账号登录，获取token等信息
       const loginResult = await accountLogin(account);
       this.token = loginResult.data.token;
+      localCache.setChche("token", this.token);
 
       // 2.获取登录用户的详细信息
       this.userInfo = await getUserInfoById(loginResult.data.id);
@@ -39,11 +41,33 @@ const useLoginStore = defineStore("login", {
       this.userMenus = userMenuResult.data;
 
       // 4.进行本地储存
-      localCache.setChche("token", this.token);
       localCache.setChche("userInfo", this.userInfo);
       localCache.setChche("userMenus", this.userMenus);
-      // 4.页面跳转(main页面)
+
+      // 5.动态添加路由
+      const routes = mapMenusToRoutes(this.userMenus);
+      routes.forEach((route) => {
+        router.addRoute("main", route);
+      });
+
+      // 6.页面跳转(main页面)
+
       router.push("/main");
+    },
+    // 用户刷新默认加载数据
+    loadLocalCacheAction() {
+      const token = localCache.getChache("token");
+      const userInfo = localCache.getChache("userInfo");
+      const userMenus = localCache.getChache("userMenus");
+      if (token && userInfo && userMenus) {
+        this.token = token;
+        this.userInfo = userInfo;
+        this.userMenus = userMenus;
+      }
+      const routes = mapMenusToRoutes(this.userMenus);
+      routes.forEach((route) => {
+        router.addRoute("main", route);
+      });
     }
   }
 });

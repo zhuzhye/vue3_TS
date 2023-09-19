@@ -1,4 +1,5 @@
 import { localCache } from "@/utils/cache";
+import { firstMenu } from "@/utils/mapMenus";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -15,25 +16,8 @@ const router = createRouter({
     },
     {
       path: "/main",
-      component: () => import("../views/main/main.vue"),
-      children: [
-        {
-          path: "/main/analysis/overview",
-          component: () => import("../views/main/analysis/overview/overview.vue")
-        },
-        {
-          path: "/main/analysis/dashboard",
-          component: () => import("../views/main/analysis/dashboard/dashboard.vue")
-        },
-        {
-          path: "/main/system/user",
-          component: () => import("../views/main/system/user/user.vue")
-        },
-        {
-          path: "/main/system/role",
-          component: () => import("../views/main/system/role/role.vue")
-        }
-      ]
+      name: "main",
+      component: () => import("../views/main/main.vue")
     },
     {
       path: "/:pathMatch(.*)",
@@ -42,11 +26,18 @@ const router = createRouter({
   ]
 });
 
+// 用户进行刷新：判断用户是否登录以及是否包含userMenu菜单
 router.beforeEach((to) => {
+  const token = localCache.getChache("token");
   if (to.path !== "/login") {
-    const token = localCache.getChache("token");
     if (!token) {
       return "/login";
+    }
+  }
+  if (to.path === "/main") {
+    console.log(firstMenu, "firstMenu");
+    if (token) {
+      return firstMenu?.url;
     }
   }
 });
