@@ -63,8 +63,6 @@ const route = useRoute();
 const pathMenu = computed(() => {
   return mapPathToMenu(route.path, userMenus).id;
 });
-// 3.ElMenu的默认选中菜单
-const defaultActive = ref(pathMenu.value + "");
 </script>
 <style lang="less" scoped>
 .main-menu {
