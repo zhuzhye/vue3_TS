@@ -11,7 +11,7 @@
         active-text-color="#fff"
         background-color="#001529"
         :collapse="isFold"
-        :default-active="defaultActive"
+        :default-active="pathMenu + ''"
       >
         <template v-for="item in userMenus" :key="item.id">
           <el-sub-menu :index="item.id + ''">
@@ -37,7 +37,7 @@
 import useLoginStore from "@/store/login/login";
 import type { subItemType } from "./types";
 import { useRouter, useRoute } from "vue-router";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { mapPathToMenu } from "../../utils/mapMenus";
 // 0.定义props
 defineProps({
@@ -59,9 +59,12 @@ function handleClickItem(subItem: subItemType) {
 }
 
 const route = useRoute();
-const pathMenu = mapPathToMenu(route.path, userMenus);
+
+const pathMenu = computed(() => {
+  return mapPathToMenu(route.path, userMenus).id;
+});
 // 3.ElMenu的默认选中菜单
-const defaultActive = ref(pathMenu.id + "");
+const defaultActive = ref(pathMenu.value + "");
 </script>
 <style lang="less" scoped>
 .main-menu {
