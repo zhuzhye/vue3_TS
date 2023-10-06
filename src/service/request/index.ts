@@ -72,6 +72,12 @@ class Request {
   post<T = any>(config: HttpReuqestConfig<T>) {
     return this.request<T>({ ...config, method: "POST" });
   }
+  delete<T = any>(config: HttpReuqestConfig<T>) {
+    return this.request<T>({ ...config, method: "DELETE" });
+  }
+  patch<T = any>(config: HttpReuqestConfig<T>) {
+    return this.request<T>({ ...config, method: "PATCH" });
+  }
 }
 
 export default Request;

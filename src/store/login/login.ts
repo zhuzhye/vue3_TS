@@ -4,6 +4,7 @@ import type { IAccount } from "../../types";
 import { localCache } from "@/utils/cache";
 import router from "@/router";
 import { mapMenusToRoutes } from "@/utils/mapMenus";
+import userMainStore from "../main/main";
 interface ILoginState {
   token: string;
   userInfo: {
@@ -44,6 +45,10 @@ const useLoginStore = defineStore("login", {
       localCache.setChche("userInfo", this.userInfo);
       localCache.setChche("userMenus", this.userMenus);
 
+      // 5.请求所有roles/department数据
+      const mainStore = userMainStore();
+      mainStore.fetchEntireDataAction();
+
       // 5.动态添加路由
       const routes = mapMenusToRoutes(this.userMenus);
       routes.forEach((route) => {
@@ -64,6 +69,8 @@ const useLoginStore = defineStore("login", {
         this.userInfo = userInfo;
         this.userMenus = userMenus;
       }
+      const mainStore = userMainStore();
+      mainStore.fetchEntireDataAction();
       const routes = mapMenusToRoutes(this.userMenus);
       routes.forEach((route) => {
         router.addRoute("main", route);
